@@ -38,6 +38,12 @@ public class SignosVitales {
     @Column(name = "ES_ALERTA")
     private Boolean esAlerta;
 
+    public SignosVitales(int frecuenciaCardiaca, String presionArterial, double temperatura) {
+        this.frecuenciaCardiaca = frecuenciaCardiaca;
+        this.presionArterial = presionArterial;
+        this.temperatura = temperatura;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;

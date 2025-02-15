@@ -153,8 +153,20 @@ volumes:
 
 # Paso 6: Probar Kafka desde la Terminal de VS Code
 
-# docker exec -it kafka-1 kafka-topics --create --topic mi-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+
+
+
+
+# docker exec -it kafka-1 kafka-topics --create --topic senales_vitales --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
 # Crear un topic con 3 particiones y replicación en los 3 nodos
+
+
+# docker exec -it kafka-1 kafka-topics --create --topic Alertas --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+# Crear un topic con 3 particiones y replicación en los 3 nodos
+
+
+
+
 
 # docker exec -it kafka-1 kafka-topics --list --bootstrap-server localhost:9092
 # Listar los topics creados
@@ -168,6 +180,10 @@ volumes:
 # Paso 7: Apagar el Cluster
 # docker-compose down
 # Cuando termines de usar Kafka, puedes detener los contenedores
+
+# Crear tópicos para señales vitales y alertas
+# docker exec -it kafka-1 kafka-topics --create --topic señales_vitales --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+# docker exec -it kafka-1 kafka-topics --create --topic alertas --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
 
 ######################### PROBAR KAFKA DESDE ADENTRO DEL CONTEDOR ################################################
 
