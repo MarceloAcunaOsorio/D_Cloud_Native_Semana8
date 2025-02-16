@@ -25,7 +25,7 @@ public class KafkaProducerService {
     private Random random = new Random();
     private RestTemplate restTemplate = new RestTemplate();
     
-    @Value("${kafka.topic.signos-vitales}")
+    @Value("${kafka.topic.signos_vitales}")
     private String TOPIC;
 
     public void sendMessage(String message) {
@@ -59,12 +59,27 @@ public class KafkaProducerService {
         }
     }
 
+    public void sendAlert(String message) {
+        try {
+            kafkaTemplate.send(TOPIC, message).whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("Alerta enviada correctamente al topic: " + TOPIC);
+                    System.out.println("Offset: " + result.getRecordMetadata().offset());
+                } else {
+                    System.err.println("Error al enviar alerta: " + ex.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Error inesperado al enviar alerta: " + e.getMessage());
+        }
+    }
+
     @Scheduled(fixedRate = 5000)
     public void sendVitalSigns() {
         try {
             System.out.println("Intentando obtener signos vitales del backend...");
             ResponseEntity<SignosVitales[]> response = restTemplate.getForEntity(
-                "http://backend:8080/api/signos-vitales", 
+                "http://localhost:8085/api/signos-vitales", 
                 SignosVitales[].class);
                 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {

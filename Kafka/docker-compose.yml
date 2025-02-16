@@ -59,10 +59,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT"
-      KAFKA_LISTENERS: "INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093"
-      KAFKA_ADVERTISED_LISTENERS: "INSIDE://kafka-1:9092,OUTSIDE://kafka-1:9093"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INSIDE"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-1:9092"
     volumes:
       - kafka-data-1:/var/lib/kafka/data
     networks:
@@ -77,10 +76,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT"
-      KAFKA_LISTENERS: "INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093"
-      KAFKA_ADVERTISED_LISTENERS: "INSIDE://kafka-2:9092,OUTSIDE://kafka-2:9093"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INSIDE"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-2:9092"
     volumes:
       - kafka-data-2:/var/lib/kafka/data
     networks:
@@ -95,10 +93,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT"
-      KAFKA_LISTENERS: "INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093"
-      KAFKA_ADVERTISED_LISTENERS: "INSIDE://kafka-3:9092,OUTSIDE://kafka-3:9093"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "INSIDE"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka-3:9092"
     volumes:
       - kafka-data-3:/var/lib/kafka/data
     networks:
@@ -243,10 +240,3 @@ volumes:
 
 # Cada mensaje que envíes se almacena en una partición específica.
 # Cada partición tiene un líder y seguidores en otros brokers.
-
-# Un broker actúa como líder de la partición.
-# Los otros brokers contienen copias (réplicas) de la partición.
-# El líder maneja las escrituras y los seguidores sincronizan los datos.
-
-# Cuando produces un mensaje, Kafka lo escribe en la partición líder.
-# Los otros brokers replican los mensajes desde el líder.

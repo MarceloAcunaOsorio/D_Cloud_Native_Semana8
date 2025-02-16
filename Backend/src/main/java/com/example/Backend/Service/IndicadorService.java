@@ -10,10 +10,10 @@ import com.example.Backend.Model.SignosVitales;
 
 @Service
 public class IndicadorService {
-   private final AlertaServicie alertaServicie;
+   private final AlertaService alertaService;
 
-   public IndicadorService(AlertaServicie alertaServicie) {
-       this.alertaServicie = alertaServicie;
+   public IndicadorService(AlertaService alertaService) {
+       this.alertaService = alertaService;
    }
 
    public List<String> getAlertasMedicas(Long pacienteId, double presionSistolica, 
@@ -56,18 +56,19 @@ public class IndicadorService {
        }
 
        // Crear y configurar objeto SignosVitales
-       SignosVitales signosVitales = new SignosVitales();
-       signosVitales.setPacienteId(pacienteId);
-       signosVitales.setPresionArterial(presionArterial);
+       SignosVitales signosVitales = new SignosVitales(
+           pacienteId.intValue(),
+           presionArterial,
+           temperatura
+       );
        signosVitales.setSaturacionOxigeno(saturacionOxigenoInt);
        signosVitales.setFrecuenciaCardiaca(frecuenciaCardiacaInt);
-       signosVitales.setTemperatura(temperatura);
        signosVitales.setFechaRegistro(LocalDateTime.now());
        signosVitales.setEsAlerta(!alertas.isEmpty());
 
        // Procesar signos vitales si hay alertas
        if (!alertas.isEmpty()) {
-           alertaServicie.procesarSignosVitales(signosVitales);
+           alertaService.procesarSignosVitales(signosVitales);
        }
 
        return alertas;
