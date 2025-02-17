@@ -21,9 +21,9 @@ public class SignosVitalesController {
             @RequestBody SignosVitales signosvitales)
             throws InterruptedException, ExecutionException {
         String successMessage = null;
-        producerService.sendMessage(topicNames, "Producing Student Details: " + signosvitales);
+        producerService.sendMessage(topicNames, "Signos Vitales Detalles: " + signosvitales);
         successMessage = String.format(
-                "Successfully produced student information to the '%s' topic. Please check the consumer.", topicNames);
+                "Successfully information to the '%s' topic. Please check the consumer.", topicNames);
         return ResponseEntity.status(HttpStatus.OK).body(successMessage);
     }
 }

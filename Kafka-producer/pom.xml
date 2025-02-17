@@ -114,10 +114,10 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-							 <layout>ZIP</layout>
-                    <executable>true</executable>
                         </exclude>
                     </excludes>
+					<layout>ZIP</layout>
+                    <executable>true</executable>
                 </configuration>
             </plugin>
 
