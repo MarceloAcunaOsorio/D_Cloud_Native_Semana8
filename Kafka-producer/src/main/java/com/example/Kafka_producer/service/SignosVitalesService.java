@@ -52,30 +52,36 @@ public class SignosVitalesService {
             String vitalSignsJson = restTemplate.getForObject(VITAL_SIGNS_ENDPOINT, String.class);
             JsonNode vitalSignsNode = objectMapper.readTree(vitalSignsJson);
 
-            // Extract values from JsonNode with null checks
-            JsonNode pacienteIdNode = vitalSignsNode.get("pacienteId");
-            String pacienteId = (pacienteIdNode != null) ? pacienteIdNode.asText() : null;
 
-            JsonNode frecuenciaCardiacaNode = vitalSignsNode.get("frecuenciaCardiaca");
-            int frecuenciaCardiaca = (frecuenciaCardiacaNode != null) ? frecuenciaCardiacaNode.asInt() : 0;
 
-            JsonNode presionArterialSistolicaNode = vitalSignsNode.get("presionArterialSistolica");
-            int presionArterialSistolica = (presionArterialSistolicaNode != null) ? presionArterialSistolicaNode.asInt() : 0;
+            // Verificar que el JSON sea un arreglo
+            if (vitalSignsNode.isArray()) 
+            {
+                // Iterar sobre cada objeto en el arreglo
+                for (JsonNode vitalSignNode : vitalSignsNode) 
+                {
+                    // Extraer el pacienteId de cada objeto en el arreglo
+                    JsonNode pacienteIdNode = vitalSignNode.get("pacienteId");
+                    String pacienteId = (pacienteIdNode != null && !pacienteIdNode.isNull()) ? pacienteIdNode.asText() : null;
+                    int frecuenciaCardiaca = vitalSignNode.get("frecuenciaCardiaca").asInt(0);
+                    int presionArterial = vitalSignNode.get("presionArterial").asInt(0);
+                    double temperatura = vitalSignNode.get("temperatura").asDouble(0.0);
+                    int saturacionOxigeno = vitalSignNode.get("saturacionOxigeno").asInt(0);
 
-            JsonNode presionArterialDiastolicaNode = vitalSignsNode.get("presionArterialDiastolica");
-            int presionArterialDiastolica = (presionArterialDiastolicaNode != null) ? presionArterialDiastolicaNode.asInt() : 0;
+                    // Crear el objeto SignosVitales con los datos extraídos
+                    SignosVitales signosVitales = new SignosVitales(pacienteId, frecuenciaCardiaca, presionArterial, temperatura, saturacionOxigeno);
 
-            JsonNode temperaturaNode = vitalSignsNode.get("temperatura");
-            double temperatura = (temperaturaNode != null) ? temperaturaNode.asDouble() : 0.0;
+                    // Publicar los datos a Kafka (o lo que sea necesario)
+                    sendMessage(topicName, signosVitales);
+                    logger.info("Published vital signs to Kafka topic {}: {}", topicName, signosVitales);
+                }
+            } 
+            else {
+                logger.warn("El JSON recibido no es un arreglo. No se puede procesar.");
+            }
 
-            JsonNode saturacionOxigenoNode = vitalSignsNode.get("saturacionOxigeno");
-            int saturacionOxigeno = (saturacionOxigenoNode != null) ? saturacionOxigenoNode.asInt() : 0;
-
-            // Create SignosVitales object
-            SignosVitales signosVitales = new SignosVitales(pacienteId, frecuenciaCardiaca, presionArterialSistolica, presionArterialDiastolica, temperatura, saturacionOxigeno);
-
-            sendMessage(topicName, signosVitales);
-            logger.info("Published vital signs to Kafka topic {}: {}", topicName, signosVitales);
+                    
+          
         } catch (IOException e) {
             logger.error("Error processing JSON: {}", e.getMessage());
         } catch (Exception e) {

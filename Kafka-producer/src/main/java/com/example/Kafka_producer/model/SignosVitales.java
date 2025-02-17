@@ -3,37 +3,28 @@ package com.example.Kafka_producer.model;
 public class SignosVitales {
     private String pacienteId;
     private int frecuenciaCardiaca;
-    private int presionArterialSistolica;
-    private int presionArterialDiastolica;
+    private int presionArterial;
     private double temperatura;
     private int saturacionOxigeno;
 
-    // Constructor sin parámetros
     public SignosVitales() {
     }
-    
-    // Constructor con parámetros
-    public SignosVitales(String pacienteID ,int frecuenciaCardiaca, int presionArterialSistolica, 
-                        int presionArterialDiastolica, double temperatura,
+
+    public SignosVitales(String pacienteID, int frecuenciaCardiaca, int presionArterial, double temperatura,
                         int saturacionOxigeno) {
+        this.pacienteId = pacienteID;
         this.frecuenciaCardiaca = frecuenciaCardiaca;
-        this.presionArterialSistolica = presionArterialSistolica;
-        this.presionArterialDiastolica = presionArterialDiastolica;
+        this.presionArterial = presionArterial;
         this.temperatura = temperatura;
         this.saturacionOxigeno = saturacionOxigeno;
     }
 
-    // Getters y Setters
     public int getFrecuenciaCardiaca() {
         return frecuenciaCardiaca;
     }
 
-    public int getPresionArterialSistolica() {
-        return presionArterialSistolica;
-    }
-
-    public int getPresionArterialDiastolica() {
-        return presionArterialDiastolica;
+    public int getPresionArterial() {
+        return presionArterial;
     }
 
     public double getTemperatura() {
@@ -44,17 +35,12 @@ public class SignosVitales {
         return saturacionOxigeno;
     }
 
-    // Setters
     public void setFrecuenciaCardiaca(int frecuenciaCardiaca) {
         this.frecuenciaCardiaca = frecuenciaCardiaca;
     }
 
-    public void setPresionArterialSistolica(int presionArterialSistolica) {
-        this.presionArterialSistolica = presionArterialSistolica;
-    }
-
-    public void setPresionArterialDiastolica(int presionArterialDiastolica) {
-        this.presionArterialDiastolica = presionArterialDiastolica;
+    public void setPresionArterial(int presionArterial) {
+        this.presionArterial = presionArterial;
     }
 
     public void setTemperatura(double temperatura) {
@@ -64,7 +50,6 @@ public class SignosVitales {
     public void setSaturacionOxigeno(int saturacionOxigeno) {
         this.saturacionOxigeno = saturacionOxigeno;
     }
-
 
     public String getPacienteId() {
         return pacienteId;
@@ -77,10 +62,9 @@ public class SignosVitales {
     @Override
     public String toString() {
         return "{" +
-                "\"pacienteID\":" + pacienteId + "," +
+                "\"pacienteId\":" + pacienteId + "," +
                 "\"frecuenciaCardiaca\":" + frecuenciaCardiaca + "," +
-                "\"presionArterialSistolica\":" + presionArterialSistolica + "," +
-                "\"presionArterialDiastolica\":" + presionArterialDiastolica + "," +
+                "\"presionArterial\":" + presionArterial + "," +
                 "\"temperatura\":" + temperatura + "," +
                 "\"saturacionOxigeno\":" + saturacionOxigeno +
                 "}";
