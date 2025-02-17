@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.Kafka_producer.config.KafkaProducerConfig;
 import com.example.Kafka_producer.model.SignosVitales;
 import com.example.Kafka_producer.service.SignosVitalesService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 public class SignosVitalesController {
@@ -21,9 +22,13 @@ public class SignosVitalesController {
             @RequestBody SignosVitales signosvitales)
             throws InterruptedException, ExecutionException {
         String successMessage = null;
-        producerService.sendMessage(topicNames, "Signos Vitales Detalles: " + signosvitales);
-        successMessage = String.format(
-                "Successfully information to the '%s' topic. Please check the consumer.", topicNames);
-        return ResponseEntity.status(HttpStatus.OK).body(successMessage);
+        try {
+            producerService.sendMessage(topicNames, signosvitales);
+            successMessage = String.format(
+                    "Successfully information to the '%s' topic. Please check the consumer.", topicNames);
+            return ResponseEntity.status(HttpStatus.OK).body(successMessage);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing JSON: " + e.getMessage());
+        }
     }
 }

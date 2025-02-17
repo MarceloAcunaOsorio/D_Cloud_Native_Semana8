@@ -1,6 +1,5 @@
 package com.example.Backend.Service;
 
-import org.springframework.context.annotation.Primary;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import com.example.Backend.Repository.SignosVitalesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-@Primary
 public class AlertaServicie implements AlertaService {
 
     private final RabbitTemplate rabbitTemplate;

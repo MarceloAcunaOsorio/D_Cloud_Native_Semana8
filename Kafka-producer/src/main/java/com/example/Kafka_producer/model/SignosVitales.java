@@ -1,6 +1,7 @@
 package com.example.Kafka_producer.model;
 
 public class SignosVitales {
+    private String pacienteId;
     private int frecuenciaCardiaca;
     private int presionArterialSistolica;
     private int presionArterialDiastolica;
@@ -12,7 +13,7 @@ public class SignosVitales {
     }
     
     // Constructor con parámetros
-    public SignosVitales(int frecuenciaCardiaca, int presionArterialSistolica, 
+    public SignosVitales(String pacienteID ,int frecuenciaCardiaca, int presionArterialSistolica, 
                         int presionArterialDiastolica, double temperatura,
                         int saturacionOxigeno) {
         this.frecuenciaCardiaca = frecuenciaCardiaca;
@@ -64,9 +65,19 @@ public class SignosVitales {
         this.saturacionOxigeno = saturacionOxigeno;
     }
 
+
+    public String getPacienteId() {
+        return pacienteId;
+    }
+
+    public void setPacienteId(String pacienteId) {
+        this.pacienteId = pacienteId;
+    }
+
     @Override
     public String toString() {
         return "{" +
+                "\"pacienteID\":" + pacienteId + "," +
                 "\"frecuenciaCardiaca\":" + frecuenciaCardiaca + "," +
                 "\"presionArterialSistolica\":" + presionArterialSistolica + "," +
                 "\"presionArterialDiastolica\":" + presionArterialDiastolica + "," +

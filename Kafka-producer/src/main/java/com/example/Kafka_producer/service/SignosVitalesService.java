@@ -1,5 +1,6 @@
 package com.example.Kafka_producer.service;
 
+import com.example.Kafka_producer.model.SignosVitales;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.retry.annotation.Retryable;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class SignosVitalesService {
@@ -23,8 +25,11 @@ public class SignosVitalesService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Retryable(maxAttempts = 5)
-    public CompletableFuture<SendResult<String, String>> sendMessage(String topicName, String message) {
+    public CompletableFuture<SendResult<String, String>> sendMessage(String topicName, SignosVitales signosVitales) throws JsonProcessingException {
+        String message = objectMapper.writeValueAsString(signosVitales);
         return this.kafkaTemplate.send(topicName, message);
     }
 
@@ -34,20 +39,43 @@ public class SignosVitalesService {
     private static final String VITAL_SIGNS_ENDPOINT = "http://localhost:8085/api/signos-vitales";
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(SignosVitalesService.class);
 
+    //ejecucion de envio de mensajes
     public SignosVitalesService() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::publishVitalSigns, 0, 13600, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::publishVitalSigns, 0, 5, TimeUnit.SECONDS);
     }
 
     private void publishVitalSigns() {
         try {
             String vitalSignsJson = restTemplate.getForObject(VITAL_SIGNS_ENDPOINT, String.class);
-            JsonNode vitalSigns = objectMapper.readTree(vitalSignsJson);
-            sendMessage(topicName, vitalSigns.toString());
-            logger.info("Published vital signs to Kafka topic {}: {}", topicName, vitalSigns);
+            JsonNode vitalSignsNode = objectMapper.readTree(vitalSignsJson);
+
+            // Extract values from JsonNode with null checks
+            JsonNode pacienteIdNode = vitalSignsNode.get("pacienteId");
+            String pacienteId = (pacienteIdNode != null) ? pacienteIdNode.asText() : null;
+
+            JsonNode frecuenciaCardiacaNode = vitalSignsNode.get("frecuenciaCardiaca");
+            int frecuenciaCardiaca = (frecuenciaCardiacaNode != null) ? frecuenciaCardiacaNode.asInt() : 0;
+
+            JsonNode presionArterialSistolicaNode = vitalSignsNode.get("presionArterialSistolica");
+            int presionArterialSistolica = (presionArterialSistolicaNode != null) ? presionArterialSistolicaNode.asInt() : 0;
+
+            JsonNode presionArterialDiastolicaNode = vitalSignsNode.get("presionArterialDiastolica");
+            int presionArterialDiastolica = (presionArterialDiastolicaNode != null) ? presionArterialDiastolicaNode.asInt() : 0;
+
+            JsonNode temperaturaNode = vitalSignsNode.get("temperatura");
+            double temperatura = (temperaturaNode != null) ? temperaturaNode.asDouble() : 0.0;
+
+            JsonNode saturacionOxigenoNode = vitalSignsNode.get("saturacionOxigeno");
+            int saturacionOxigeno = (saturacionOxigenoNode != null) ? saturacionOxigenoNode.asInt() : 0;
+
+            // Create SignosVitales object
+            SignosVitales signosVitales = new SignosVitales(pacienteId, frecuenciaCardiaca, presionArterialSistolica, presionArterialDiastolica, temperatura, saturacionOxigeno);
+
+            sendMessage(topicName, signosVitales);
+            logger.info("Published vital signs to Kafka topic {}: {}", topicName, signosVitales);
         } catch (IOException e) {
             logger.error("Error processing JSON: {}", e.getMessage());
         } catch (Exception e) {
