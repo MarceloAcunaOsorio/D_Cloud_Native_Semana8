@@ -37,7 +37,7 @@ public class SignosVitalesService {
     @Value("${kafka.topic}")
     private String topicName;
 
-    private static final String VITAL_SIGNS_ENDPOINT = "http://localhost:8085/api/signos-vitales";
+    private static final String VITAL_SIGNS_ENDPOINT = "http://34.196.103.34:8085/api/signos-vitales";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(SignosVitalesService.class);

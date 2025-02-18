@@ -17,15 +17,13 @@ FROM eclipse-temurin:22-jdk
 RUN mkdir -p /opt/oracle/wallet
 
 # Copiar el jar
-COPY --from=buildstage /app/target/Backend-0.0.1-SNAPSHOT.jar /app/backend.jar
+COPY --from=buildstage /app/target/Kafka-producer-0.0.1-SNAPSHOT.jar /app/kafka-producer.jar
 
-# Copiar el wallet a la nueva ubicación y establecer permisos
-COPY Wallet_QMX8X1I4LTY0NIR1/* /opt/oracle/wallet/
-RUN chmod -R 600 /opt/oracle/wallet
+
 
 #Puerto
-EXPOSE 8085
+EXPOSE 8086
 
-CMD [ "java", "-jar", "/app/backend.jar" ]
+CMD [ "java", "-jar", "/app/kafka-producer.jar" ]
 
 
