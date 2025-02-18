@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8085:8085"
     environment:
       - spring.datasource.url=jdbc:oracle:thin:@qmx8x1i4lty0nir1_low?TNS_ADMIN=/app/wallet_hospital
       - spring.datasource.username=ADMIN

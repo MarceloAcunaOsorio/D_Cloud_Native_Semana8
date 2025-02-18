@@ -27,6 +27,7 @@ public class SignosVitalesService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    //Indica que el método debe ser reintentado en caso de que ocurra un error.
     @Retryable(maxAttempts = 5)
     public CompletableFuture<SendResult<String, String>> sendMessage(String topicName, SignosVitales signosVitales) throws JsonProcessingException {
         String message = objectMapper.writeValueAsString(signosVitales);
